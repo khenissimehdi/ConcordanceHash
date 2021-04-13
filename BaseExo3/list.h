@@ -25,7 +25,8 @@ void free_list(link *lst);
 table *create_table(int M);
 link *create_link(char word[]);
 link *find_list(link *lst, char word[]);
-link *insert_first_list(link *lst, char word[]);
+olink *create_olink(int pos);
+link *insert_first_list(link *lst, char word[], int pos);
 
 void display_list(link *lst);
 

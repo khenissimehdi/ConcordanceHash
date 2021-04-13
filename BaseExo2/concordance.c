@@ -5,52 +5,26 @@
 
 #define MAX_WORD_LENGTH 80
 
-
 void add_occurrence(link *lnk, int pos)
 {
-    if (lnk->occurrences == NULL)
+
+    olink *current = lnk->occurrences;
+
+    while (current->next != NULL)
     {
 
-        olink *newOc = create_olink(pos);
-
-        lnk->occurrences = newOc;
-        /* printf("%s , %d \n", lnk->word, lnk->occurrences->pos);*/
-        return;
+        current = current->next;
     }
 
-    else
-    {
-
-        if (lnk->occurrences->next == NULL)
-        {
-
-            olink *newOc = create_olink(pos + 1);
-            lnk->occurrences->next = newOc;
-        }
-
-        int posBis = lnk->occurrences->pos;
-
-        olink *current = lnk->occurrences;
-
-        while (current->next != NULL)
-        {
-            /*printf("%s \n", lnk->word);*/
-
-            current = current->next;
-            posBis = posBis + 1;
-        }
-
-        olink *newOc = create_olink(posBis);
-
-        current->next = newOc;
-        /*printf("%s , %d \n", lnk->word, current->next->pos);*/
-    }
+    olink *newOc = create_olink(pos);
+    current->next = newOc;
 }
 
 link *read_text(FILE *infile)
 {
     link *lst = NULL;
     char *word = (char *)malloc(MAX_WORD_LENGTH * sizeof(char));
+    int pos = 0;
     while (fscanf(infile, "%s ", word) != -1)
     {
         link *oc = NULL;
@@ -61,13 +35,14 @@ link *read_text(FILE *infile)
 
         if (oc != NULL)
         {
-            /* printf("%s \n", word);*/
-            add_occurrence(oc, 1);
+
+            add_occurrence(oc, pos);
         }
         else
         {
-            lst = insert_first_list(lst, word);
+            lst = insert_first_list(lst, word, pos);
         }
+        pos++;
     }
     free(word);
     return lst;

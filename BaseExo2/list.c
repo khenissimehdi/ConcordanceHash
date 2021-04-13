@@ -30,14 +30,24 @@ void display_list(link *lst)
 
         if (lst->occurrences != NULL)
         {
+
             olink *current = lst->occurrences;
-            while (current->next != NULL)
+            printf("%s : ", lst->word);
+            /*printf("%d ,", current->pos);*/
+            while (current != NULL)
             {
+                if (current->next != NULL)
+                {
+                    printf("%d ,", current->pos);
+                }
+                else
+                {
+                    printf("%d ", current->pos);
+                }
 
                 current = current->next;
             }
-
-            printf("%s : %d\n", lst->word, current->pos);
+            putchar('\n');
         }
         else
         {
@@ -77,9 +87,11 @@ link *find_list(link *lst, char word[])
     return ptr;
 }
 
-link *insert_first_list(link *lst, char word[])
+link *insert_first_list(link *lst, char word[], int pos)
 {
     link *tmp = create_link(word);
+    tmp->occurrences = create_olink(pos);
     tmp->next = lst;
+
     return tmp;
 }

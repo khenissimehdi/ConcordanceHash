@@ -16,7 +16,7 @@ typedef struct _link
 void free_list(link *lst);
 olink *create_olink(int pos);
 link *find_list(link *lst, char word[]);
-link *insert_first_list(link *lst, char word[]);
+link *insert_first_list(link *lst, char word[], int pos);
 
 void display_list(link *lst);
 

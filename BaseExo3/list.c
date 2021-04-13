@@ -16,6 +16,13 @@ link *create_link(char word[])
     lnk->next = NULL;
     return lnk;
 }
+olink *create_olink(int pos)
+{
+    olink *occurence = malloc(sizeof(olink));
+    occurence->next = NULL;
+    occurence->pos = pos;
+    return occurence;
+}
 
 void free_link(link *lnk)
 {
@@ -30,14 +37,24 @@ void display_list(link *lst)
 
         if (lst->occurrences != NULL)
         {
+
             olink *current = lst->occurrences;
-            while (current->next != NULL)
+            printf("%s : ", lst->word);
+            /*printf("%d ,", current->pos);*/
+            while (current != NULL)
             {
+                if (current->next != NULL)
+                {
+                    printf("%d ,", current->pos);
+                }
+                else
+                {
+                    printf("%d ", current->pos);
+                }
 
                 current = current->next;
             }
-
-            printf("%s : %d\n", lst->word, current->pos);
+            putchar('\n');
         }
         else
         {
@@ -50,7 +67,7 @@ void display_list(link *lst)
 table *create_table(int M)
 {
     table *newTable = malloc(sizeof(table));
-    newTable->bucket = malloc(sizeof(link) * M);
+    newTable->bucket = malloc(sizeof(link *) * M);
     newTable->M = M;
     newTable->size = 0;
     int i;
@@ -83,9 +100,11 @@ link *find_list(link *lst, char word[])
     return ptr;
 }
 
-link *insert_first_list(link *lst, char word[])
+link *insert_first_list(link *lst, char word[], int pos)
 {
     link *tmp = create_link(word);
+    tmp->occurrences = create_olink(pos);
     tmp->next = lst;
+
     return tmp;
 }

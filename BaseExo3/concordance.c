@@ -5,52 +5,20 @@
 
 #define MAX_WORD_LENGTH 80
 table *tab;
-olink *create_olink(int pos)
-{
-    olink *occurence = malloc(sizeof(olink));
-    occurence->next = NULL;
-    occurence->pos = pos;
-    return occurence;
-}
+
 void add_occurrence(link *lnk, int pos)
 {
-    if (lnk->occurrences == NULL)
+
+    olink *current = lnk->occurrences;
+
+    while (current->next != NULL)
     {
 
-        olink *newOc = create_olink(pos);
-
-        lnk->occurrences = newOc;
-        /* printf("%s , %d \n", lnk->word, lnk->occurrences->pos);*/
-        return;
+        current = current->next;
     }
 
-    else
-    {
-
-        if (lnk->occurrences->next == NULL)
-        {
-
-            olink *newOc = create_olink(pos + 1);
-            lnk->occurrences->next = newOc;
-        }
-
-        int posBis = lnk->occurrences->pos;
-
-        olink *current = lnk->occurrences;
-
-        while (current->next != NULL)
-        {
-            /*printf("%s \n", lnk->word);*/
-
-            current = current->next;
-            posBis = posBis + 1;
-        }
-
-        olink *newOc = create_olink(posBis);
-
-        current->next = newOc;
-        /*printf("%s , %d \n", lnk->word, current->next->pos);*/
-    }
+    olink *newOc = create_olink(pos);
+    current->next = newOc;
 }
 unsigned hash2(char *elt)
 {
@@ -98,6 +66,7 @@ void add_occ_table(table *tab, char word[], int pos)
         printf("%s : %s : %d : %d \n", word, tab->bucket[hashCode]->word, strcmp(tab->bucket[hashCode]->word, word), hashCode);
     }*/
     link *oc = find(tab, hashCode, word);
+
     if (oc != NULL)
     {
 
@@ -107,7 +76,7 @@ void add_occ_table(table *tab, char word[], int pos)
     else
     {
 
-        tab->bucket[hashCode] = insert_first_list(tab->bucket[hashCode], word);
+        tab->bucket[hashCode] = insert_first_list(tab->bucket[hashCode], word, pos);
     }
 }
 
@@ -121,6 +90,7 @@ link *read_text(FILE *infile)
 
     link *lst = NULL;
     char *word = (char *)malloc(MAX_WORD_LENGTH * sizeof(char));
+    int pos = 0;
     while (fscanf(infile, "%s ", word) != -1)
     {
         /*link *oc = NULL;
@@ -138,7 +108,8 @@ link *read_text(FILE *infile)
         {
             lst = insert_first_list(lst, word);
         }*/
-        add_occ_table(tab, word, 1);
+        add_occ_table(tab, word, pos);
+        pos++;
     }
     free(word);
     return lst;
@@ -146,7 +117,7 @@ link *read_text(FILE *infile)
 
 int main(int argc, char **argv)
 {
-    tab = create_table(1);
+    tab = create_table(50);
 
     if (argc < 2)
     {
@@ -178,10 +149,10 @@ int main(int argc, char **argv)
         if (tab->bucket[i] != NULL)
         {
 
-            display_list(tab->bucket[0]);
+            display_list(tab->bucket[i]);
         }
     }
-    printf("%s : \n", tab->bucket[0]->word);
+    /* printf("%s : \n", tab->bucket[0]->word);*/
 
     /*  link *c = tab->bucket[0] = lst;
     printf("%s \n", c->word);*/
