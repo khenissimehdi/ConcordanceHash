@@ -16,12 +16,35 @@ link *create_link(char word[])
     lnk->next = NULL;
     return lnk;
 }
-
+void free_Olink(olink *lnk)
+{
+   
+    free(lnk);
+}
 void free_link(link *lnk)
 {
+     if (lnk->occurrences != NULL)
+        {
+
+            
+        
+         
+            while (lnk->occurrences)
+            {
+               olink *current = lnk->occurrences;
+                lnk->occurrences = lnk->occurrences->next;
+               free_Olink(current);
+               
+                
+            }
+        
+         
+        }
+
     free(lnk->word);
     free(lnk);
 }
+
 
 void display_list(link *lst)
 {
@@ -68,6 +91,7 @@ void free_list(link *lst)
 {
     while (lst)
     {
+       
         link *tmp = lst;
         lst = lst->next;
         free_link(tmp);

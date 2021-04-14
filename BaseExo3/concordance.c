@@ -20,17 +20,7 @@ void add_occurrence(link *lnk, int pos)
     olink *newOc = create_olink(pos);
     current->next = newOc;
 }
-unsigned hash2(char *elt)
-{
-    int i;
-    unsigned h;
-    h = 0;
-    for (i = 0; elt[i] != '\0'; i++)
-    {
-        h = 31 * h + elt[i];
-    }
-    return h;
-}
+
 
 unsigned hash(char *elt, int M)
 {
@@ -58,19 +48,14 @@ void add_occ_table(table *tab, char word[], int pos)
 {
 
     unsigned hashCode = hash(word, tab->M);
-    /*printf("%d  :  \n", hashCode);*/
-
-    /*link *newWord = create_link(word);*/
-    /*if (tab->bucket[hashCode] != NULL)
-    {
-        printf("%s : %s : %d : %d \n", word, tab->bucket[hashCode]->word, strcmp(tab->bucket[hashCode]->word, word), hashCode);
-    }*/
+    
     link *oc = find(tab, hashCode, word);
 
     if (oc != NULL)
     {
 
         add_occurrence(oc, pos);
+        
     }
 
     else
@@ -78,46 +63,30 @@ void add_occ_table(table *tab, char word[], int pos)
 
         tab->bucket[hashCode] = insert_first_list(tab->bucket[hashCode], word, pos);
     }
+  
+  
+    
 }
 
-link *read_text(FILE *infile)
+void read_text(FILE *infile)
 {
 
-    /* if (tab->bucket[90] == NULL)
-    {
-        printf("yes its equal to null");
-    }*/
 
-    link *lst = NULL;
+  
     char *word = (char *)malloc(MAX_WORD_LENGTH * sizeof(char));
     int pos = 0;
     while (fscanf(infile, "%s ", word) != -1)
     {
-        /*link *oc = NULL;
-        if (lst != NULL)
-        {
-            oc = find_list(lst, word);
-        }
-
-        if (oc != NULL)
-        {
-           
-            add_occurrence(oc, 1);
-        }
-        else
-        {
-            lst = insert_first_list(lst, word);
-        }*/
         add_occ_table(tab, word, pos);
         pos++;
     }
     free(word);
-    return lst;
+   
 }
 
 int main(int argc, char **argv)
 {
-    tab = create_table(50);
+    tab = create_table(1);
 
     if (argc < 2)
     {
@@ -132,34 +101,38 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    link *lst = read_text(fin);
+    read_text(fin);
     fclose(fin);
 
-    int words = 0;
-    link *ptr;
-    for (ptr = lst; ptr != NULL; ptr = ptr->next)
-    {
-
-        words++;
-    }
-    /* printf(" hello %s\n", tab->bucket[5]->word);*/
+  
+  
     int i;
     for (i = 0; i < tab->M; i++)
     {
         if (tab->bucket[i] != NULL)
         {
+          
 
             display_list(tab->bucket[i]);
         }
     }
-    /* printf("%s : \n", tab->bucket[0]->word);*/
-
-    /*  link *c = tab->bucket[0] = lst;
-    printf("%s \n", c->word);*/
-
-    /* printf("total number of words = %d\n", words);*/
-
-    /*free_list(lst);*/
+   
+    
+     for (i = 0; i < tab->M; i++)
+    {
+         if (tab->bucket[i] != NULL)
+        {
+      
+            free_list(tab->bucket[i]);
+        }
+     
+      
+       
+    }
+ 
+    free(tab->bucket);
+    free(tab);
+   
 
     return 0;
 }

@@ -23,12 +23,39 @@ olink *create_olink(int pos)
     occurence->pos = pos;
     return occurence;
 }
-
+void free_Olink(olink *lnk)
+{
+   
+   
+    free(lnk);
+    
+}
 void free_link(link *lnk)
 {
+     if (lnk->occurrences != NULL)
+        {
+
+            
+        
+         
+            while (lnk->occurrences)
+            {
+               olink *current = lnk->occurrences;
+               lnk->occurrences = lnk->occurrences->next;
+                
+                
+                
+                free_Olink(current);
+               
+                
+            }
+        
+         
+        }
+
     free(lnk->word);
     free(lnk);
-}
+} 
 
 void display_list(link *lst)
 {
@@ -71,7 +98,7 @@ table *create_table(int M)
     newTable->M = M;
     newTable->size = 0;
     int i;
-    for (i = 0; i <= M; i++)
+    for (i = 0; i < M; i++)
     {
         newTable->bucket[i] = NULL;
     }
@@ -85,6 +112,7 @@ void free_list(link *lst)
         lst = lst->next;
         free_link(tmp);
     }
+   
 }
 
 int equal(char *w1, char *w2)
