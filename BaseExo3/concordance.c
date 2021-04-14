@@ -5,7 +5,8 @@
 
 #define MAX_WORD_LENGTH 80
 table *tab;
-
+int otherwords = 0;
+int words = 0;
 void add_occurrence(link *lnk, int pos)
 {
 
@@ -62,7 +63,9 @@ void add_occ_table(table *tab, char word[], int pos)
     {
 
         tab->bucket[hashCode] = insert_first_list(tab->bucket[hashCode], word, pos);
+         words++;
     }
+    otherwords++;
   
   
     
@@ -114,6 +117,7 @@ int main(int argc, char **argv)
           
 
             display_list(tab->bucket[i]);
+           
         }
     }
    
@@ -129,6 +133,8 @@ int main(int argc, char **argv)
       
        
     }
+    printf("total number of words = %d\n", otherwords);
+    printf("total number of distincts words = %d\n", words);
  
     free(tab->bucket);
     free(tab);

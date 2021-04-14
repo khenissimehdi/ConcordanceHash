@@ -4,7 +4,7 @@
 #include "list.h"
 
 #define MAX_WORD_LENGTH 80
-
+int otherwords = 0;
 void add_occurrence(link *lnk, int pos)
 {
 
@@ -42,6 +42,7 @@ link *read_text(FILE *infile)
         {
             lst = insert_first_list(lst, word, pos);
         }
+        otherwords++;
         pos++;
     }
     free(word);
@@ -76,7 +77,8 @@ int main(int argc, char **argv)
     }
     display_list(lst);
 
-    printf("total number of words = %d\n", words);
+    printf("total number of words = %d\n", otherwords);
+     printf("total number of distincts words = %d\n", words);
 
     free_list(lst);
 
